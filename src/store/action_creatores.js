@@ -41,3 +41,31 @@ export function clearSearchText(payload) {
     payload,
   }
 }
+
+export function fetchData(searchText) {
+
+  return (dispatcher) => {
+
+    dispatcher(updateLoading(true)); // установить индикатор загрузки данных в ТРУ - включить спинер
+    const data = fetch(`https://api.tvmaze.com/search/shows?q=batman`);
+
+    data.then(response => {
+      return response.json();
+    }).then(localData => {
+      // this.setState({movieList: data}); - остатки от вызова в классе (когда фетчинг данных из класса)
+      dispatcher(updateMoovieList(localData)); // записать в ридакс стор список фильмов
+
+      dispatcher(fetchSuccess()); // установить статус состояния загрузки - УСПЕШНО загружены данные
+    }).catch((e) => {
+
+      dispatcher(fetchFailed()); // установить статус состояния загрузки - ПРОВАЛ данные НЕ удалось загрузить
+
+      console.log('Sabotage: data fetch ERROR.', e);
+    }).finally(() => {
+
+      dispatcher(updateLoading(false)); // установить индикатор загрузки данных в FALSE (выключить спинер)
+
+    });
+
+  }
+}
