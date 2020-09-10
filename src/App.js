@@ -1,25 +1,15 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import SearchBar from './components/searchBar';
 import CardViewToggler from './components/cardViewToggler';
-import Table from './components/tableView'
+import Table from './components/tableView';
+import { fetchData } from './store/action_creatores';
 import './App.css';
 
 class App extends React.Component {
 
-  state = {
-    movieList: [],
-  }
-
   componentDidMount() {
-
-    const data = fetch(`https://api.tvmaze.com/search/shows?q=batman`);
-
-    data.then(response => {
-      return response.json();
-    }).then(data => {
-      this.setState({movieList: data});
-    });
-
+    this.props.getData();
   }
 
   render() {
@@ -43,7 +33,7 @@ class App extends React.Component {
         </div>
         <div className="row">
           <div className="col-md">
-            <Table list={ this.state.movieList } />
+            <Table list={ this.props.movieList } />
 
             <div id="cardsList" style={{display: "none"}}>
 
@@ -61,4 +51,25 @@ class App extends React.Component {
   }
 }
 
-export default App;
+
+const mapStateToProps = (store) => { // какие свойства из ридкс стораджа мы должны подключить к нашему компоненту в виде пропсов
+
+  // эта функция должна на выход вернуть объект
+  console.log('STORE', store)
+  return {
+    movieList: store.app.movieList,
+    isLoading: store.app.isLoading,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+
+  // эта функция должна на выход вернуть объект
+  return {
+    getData: (searchText) => dispatch(fetchData(searchText)),
+  }
+}
+
+const connected = connect(mapStateToProps, mapDispatchToProps) // коннект на вход принимает 2 колбэка
+
+export default connected(App);
