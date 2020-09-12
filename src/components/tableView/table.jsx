@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TableHeader from './tableHeader';
 import TableRow from './tableRow';
+import Spinner from '../spinner';
 
 Table.propTypes = {
   list: PropTypes.array,
+  isLoading: PropTypes.bool,
 };
 
 Table.defaultProps = {
@@ -30,7 +32,7 @@ const HEADER_CELLS = [
   },
 ];
 
-function Table({ list }) {
+function Table({ list, isLoading }) {
 
   const formatData = (show) => {
     const { genres, name, id, premiered, status } = show;
@@ -53,13 +55,31 @@ function Table({ list }) {
     return result;
   }
 
+  const renderSpinner = () => {
+
+    const style = {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "200px"
+    };
+
+    return (<tr>
+      <td colSpan={5} style={{backgroundColor: "white !important"}}>
+        <div style={style}>
+          <Spinner />
+        </div>
+      </td>
+    </tr>);
+  }
+
   return (
     <table id="showList" className="table table-striped">
       <TableHeader columnNames={ HEADER_CELLS } />
 
       <tbody>
       {
-        renderList()
+        isLoading ? renderSpinner() : renderList()
       }
 
       </tbody>

@@ -2,13 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {Container, Row, Col } from 'react-bootstrap';
 
-import SearchBar from './components/searchBar';
-import CardViewToggler from './components/cardViewToggler';
-import Table from './components/tableView';
-import { fetchData } from './store/action_creatores';
-import './App.css';
+import SearchBar from '../searchBar';
+import CardViewToggler from '../cardViewToggler';
+import Table from '../tableView';
+import { fetchData } from '../../store/action_creatores';
 
-class App extends React.Component {
+class Movies extends React.Component {
 
   componentDidMount() {
     this.props.getData();
@@ -25,14 +24,17 @@ class App extends React.Component {
         </Row>
         <Row>
           <Col>
-              <SearchBar>
-                <CardViewToggler />
-              </SearchBar>
+            <SearchBar>
+              <CardViewToggler />
+            </SearchBar>
           </Col>
         </Row>
         <Row>
           <Col>
-            <Table list={ this.props.movieList } />
+            <Table
+              list={ this.props.movieList }
+              isLoading={ this.props.isLoading }
+            />
 
             <div id="cardsList" style={{display: "none"}}>
 
@@ -98,9 +100,9 @@ export default connected(App); // исполяем функцию, котору�
 // альтернативная форма записи connect - более короткая
 
 export default connect(store => ({
-  movieList: store.app.movieList,
-  isLoading: store.app.isLoading,
-}),
+    movieList: store.app.movieList,
+    isLoading: store.app.isLoading,
+  }),
   dispatch => ({
     getData: (searchText) => dispatch(fetchData(searchText)),
-  }))(App);
+  }))(Movies);
