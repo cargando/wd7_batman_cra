@@ -6,6 +6,7 @@ const initialStore = {
   isLoading: false,
   fetchStatus: null,
   searchText: '',
+  toggleStatus: false,
 };
 
 function rootReducer(store = initialStore, action) {
@@ -28,6 +29,12 @@ function rootReducer(store = initialStore, action) {
       return {
         ...store,
         searchText: action.payload,
+      }
+
+    case ACT.UPDATE_VIEW_TOGGLE: // случилось событие - обновить состояние тоглера (переключатель режим вида карточки-таблица)
+      return {
+        ...store,
+        toggleStatus: action.payload,
       }
 
     case ACT.FETCH_SUCCESS: // случилось событие - обновить статус загрузки - УСПЕХ

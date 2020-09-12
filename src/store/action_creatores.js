@@ -9,6 +9,13 @@ export function updateMoovieList(payload) {
   };
 }
 
+export function updateViewToggle(payload) {
+  return { // это JS объект - и есть тот самый реальный Redux action
+    type: ACT.UPDATE_VIEW_TOGGLE,
+    payload,
+  };
+}
+
 export function fetchFailed() {
   return {
     type: ACT.FETCH_FAILED,
@@ -29,9 +36,18 @@ export function updateLoading(payload) {
 }
 
 export function updateSearchText(payload) {
-  return {
-    type: ACT.UPDATE_SEARCH_TEXT,
-    payload,
+  // return {
+  //   type: ACT.UPDATE_SEARCH_TEXT,
+  //   payload,
+  // }
+
+  return (dispatch) => {
+
+    dispatch({
+        type: ACT.UPDATE_SEARCH_TEXT,
+        payload,
+      });
+    dispatch(fetchData(payload));
   }
 }
 
@@ -47,7 +63,7 @@ export function fetchData(searchText) {
   return (dispatcher) => {
 
     dispatcher(updateLoading(true)); // установить индикатор загрузки данных в ТРУ - включить спинер
-    const data = fetch(`https://api.tvmaze.com/search/shows?q=batman`);
+    const data = fetch(`https://api.tvmaze.com/search/shows?q=${ searchText }`);
 
     data.then(response => {
       return response.json();

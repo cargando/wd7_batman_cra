@@ -1,23 +1,46 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import {Button, Form, Col, Row} from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import {updateSearchText} from '../../store/action_creatores';
 
 SearchBar.propTypes = {
-
+  searchText: PropTypes.string.isRequired,
+  handleTextChange: PropTypes.func.isRequired,
 };
 
-function SearchBar(props) {
+function SearchBar({searchText, handleTextChange, children}) {
+
   return (
-    <>
-      <div className="col-auto">
-        <label className="sr-only" htmlFor="inlineFormInput">Искать show</label>
-        <input id="searchText" type="text" className="form-control mb-2" id="inlineFormInput"
-               placeholder="Название выпуска" />
-      </div>
-      <div className="col-auto">
-        <button id="searchButton" type="button" className="btn btn-primary mb-2">Search</button>
-      </div>
-    </>
+    <Form>
+      <Row>
+        <Col>
+        <Form.Group controlId="formBasicEmail">
+          <Form.Label>Искать show</Form.Label>
+          <Form.Control
+            value={searchText}
+            type="text"
+            placeholder="Название show"
+            onChange={handleTextChange}
+          />
+        </Form.Group>
+        </Col>
+        <Col>
+          <Button size="small" variant="primary">Search</Button>
+        </Col>
+        <Col>
+          {
+            children
+          }
+        </Col>
+      </Row>
+    </Form>
   );
 }
 
-export default SearchBar;
+export default connect(store => ({
+    searchText: store.app.searchText,
+  }),
+  dispatch => ({
+    handleTextChange: (e) => dispatch(updateSearchText(e.target.value)),
+  }))(SearchBar);

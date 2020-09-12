@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import {Container, Row, Col } from 'react-bootstrap';
+
 import SearchBar from './components/searchBar';
 import CardViewToggler from './components/cardViewToggler';
 import Table from './components/tableView';
@@ -14,25 +16,22 @@ class App extends React.Component {
 
   render() {
     return (
-      <div id="pageContainer" className="container">
-        <div className="row">
-          <div className="col-md">
+      <Container>
+        <Row>
+          <Col>
             <h1>TV Maze Shows</h1>
             <h4 id="headerShowText"></h4>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md">
-            <form>
-              <div className="form-row align-items-center">
-                <SearchBar />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+              <SearchBar>
                 <CardViewToggler />
-              </div>
-            </form>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md">
+              </SearchBar>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
             <Table list={ this.props.movieList } />
 
             <div id="cardsList" style={{display: "none"}}>
@@ -40,39 +39,43 @@ class App extends React.Component {
 
             </div>
 
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md">
-          </div>
-        </div>
-      </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }
 
+/*
 
 const mapStateToProps = (store) => { // какие свойства из ридкс стораджа мы должны подключить к нашему компоненту в виде пропсов
   // эта функция на вход от ридакса получает глобал стор, далее вы из этого глобал стора выбираете нужные вам поля и возвращаете их в виде объекта
 
-  // эта функция должна на выход вернуть объект
+
   console.log('STORE', store)
 
-  return { // возвращаем объект, названия полей этого объекты вы определяете самостоятельно
-    // поля этого объекты будут как бы скопированы (property injection) в ваш компонент в виде одноименных пропсов.
+  // эта функция должна на выход вернуть объект
+  return { // возвращаем объект, названия полей этого объекта вы определяете самостоятельно
+    // поля этого объекта будут как бы скопированы (property injection) в ваш компонент в виде одноименных пропсов.
     movieList: store.app.movieList,
     isLoading: store.app.isLoading,
   }
 }
 
 const mapDispatchToProps = (dispatch) => { // какие экшн креаторы мы хотим подключить к нашему компоненту в виде пропсов
-  // которые потом можно будет дернуть и обновить данные в ридакс торадже или сделать фетч данных
+  // которые потом можно будет дернуть и обновить данные в ридакс сторадже или сделать фетч данных
   // эта функция на вход от ридакса получает метод диспетчер (dispatch), который умеет создавать (инициировать) события в экосистеме Ридакса
 
   // эта функция должна на выход вернуть объект
-  return {// возвращаем объект, названия полей этого объекты вы определяете самостоятельно
-    // поля этого объекты будут как бы скопированы (property injection) в ваш компонент в виде одноименных пропсов.
-    getData: (searchText) => dispatch(fetchData(searchText)),
+  return {// возвращаем объект, названия полей этого объекта вы определяете самостоятельно
+    // поля этого объекта будут как бы скопированы (property injection) в ваш компонент в виде одноименных пропсов.
+    getData: (searchText) => dispatch(fetchData(searchText)), // ссылка на безымянную функцию, которая через механизм "замыкания" имеет доступ к диспетчеру
+    // который прилетел на вход в функцию mapDispatchToProps
+    // и потом с помощью диспетчера может инициировать события Ридакса (через вызов экшн креаторов, которые в свою очередь возвращают экшн)
   }
 }
 
@@ -89,3 +92,15 @@ const connected = connect(mapStateToProps, mapDispatchToProps) // коннект
 
 
 export default connected(App); // исполяем функцию, которую вернула connect() и передаем ей на вход наш компонент
+
+// */
+////////////////////////////
+// альтернативная форма записи connect - более короткая
+
+export default connect(store => ({
+  movieList: store.app.movieList,
+  isLoading: store.app.isLoading,
+}),
+  dispatch => ({
+    getData: (searchText) => dispatch(fetchData(searchText)),
+  }))(App);
